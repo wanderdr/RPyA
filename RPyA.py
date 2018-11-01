@@ -3,6 +3,8 @@ import getpass
 import sys
 import atexit
 from datetime import datetime
+import os
+import math
 
 class RPyA:
 	def __init__(self):
@@ -143,14 +145,6 @@ class RPyA:
 			print('keying up {key}'.format(key=key))
 			self.KeyUp(key)
 
-	def __MouseClick(self, button: int):
-		if button == 0:
-			return 'left'
-		elif button == 1:
-			return 'middle'
-		elif button == 2:
-			return 'right'
-
 	####################################################################################################
 	############################################ ACTION LIST ###########################################
 	####################################################################################################
@@ -215,7 +209,7 @@ class RPyA:
 			if key in self.__key_down_list:
 				self.__key_down_list.remove(key)
 		else:
-			self.__Exception('Key \'{key}\' not in list (get the key list with the function \'GetKeyList()\')'.format(key=key))
+			self.__Exception('Key \'{key}\' not in list (get the key list with the function \'getKeyList()\')'.format(key=key))
 
 	def keyDown(self, key: str):
 		eval(self.__action)
@@ -224,7 +218,7 @@ class RPyA:
 			if key not in self.__key_down_list:
 				self.__key_down_list.append(key)
 		else:
-			self.__Exception('Key \'{key}\' not in list (get the key list with the function \'GetKeyList()\')'.format(key=key))
+			self.__Exception('Key \'{key}\' not in list (get the key list with the function \'getKeyList()\')'.format(key=key))
 	
 	def copy(self):
 		eval(self.__action)
@@ -239,7 +233,7 @@ class RPyA:
 		command = ''
 		for key in key_list:
 			if key.lower() not in self.__keys_list:
-				self.__Exception('Key \'{key}\' not in list (get the key list with the function \'GetKeyList()\')'.format(key=key))
+				self.__Exception('Key \'{key}\' not in list (get the key list with the function \'getKeyList()\')'.format(key=key))
 				break
 			else:
 				command = ('{command}, '.format(command=command) if len(command) > 0 else '') + '\'{key}\''.format(key=key)
@@ -274,15 +268,77 @@ class RPyA:
 		else:
 			pyautogui.screenshot(location, region=(left, top, width, height))
 
-	def imageRecognition(self, base_image: str, image: str):
-		eval(self.__action)
-
-	def imageRecognitionOnScreen(self, image: str, move_mouse: bool = False, click_mouse: bool = False):
-		eval(self.__action)
-
-	def imageRecognition(self, base_image: str, image: str):
+	def imageRecognition(self, base_image: str, image: str, all_results: bool = False, grayscale: bool = False):
 		eval(self.__action)
 		
+		if not os.path.isfile(image):
+			self.__Exception('Base image do not exist ({base})'.format(base=base_image))
+		elif not os.path.isfile(image):
+			self.__Exception('Image do not exist ({image})'.format(image=image))
+		else:
+			if not all_results:
+				position = pyautogui.locate(image, base_image, grayscale=grayscale)
+				position = [position[0], position[1]] if position is not None else None
+			else:
+				position = []
+				positions = pyautogui.locateAll(image, base_image, grayscale=grayscale)
+				for i in positions:
+					position.append([i[0], i[1]])
+				position = position if len(position) > 0 else None
+			
+			if position is None:
+				self.__Exception('Image not found on base image'.format(image=image))
+				return None
+			return position
+
+	def imageRecognitionOnScreen(self, image: str, center: bool = True, all_results: bool = False, grayscale: bool = False):
+		eval(self.__action)
+
+		if not os.path.isfile(image):
+			self.__Exception('Image do not exist ({image})'.format(image=image))
+		else:
+			if not all_results:
+				if not center:
+					position = pyautogui.locateOnScreen(image, grayscale=grayscale)
+				else:
+					position = pyautogui.locateCenterOnScreen(image, grayscale=grayscale)
+				position = [position[0], position[1]] if position is not None else None
+			else:
+				position = []
+				positions = pyautogui.locateAllOnScreen(image, grayscale=grayscale)
+				for i in positions:
+					'''
+					PyAutoGui don't have a function to locate all center on screen, so,
+					improvise, adapt, overcome!
+					'''
+					x, y = i[0], i[1]
+					if center:
+						x = x + math.floor(i[2] / 2)
+						y = y + math.floor(i[3] / 2)
+					position.append([x, y])
+				position = position if len(position) > 0 else None
+			
+			if position is None:
+				self.__Exception('Image not found on base image'.format(image=image))
+				return None
+			return position
+
+	def clickImageOnScreen(self, image: str, center: bool = True, button: int = 0):
+		eval(self.__action)
+
+		if not os.path.isfile(image):
+			self.__Exception('Image do not exist ({image})'.format(image=image))
+		else:
+			if not center:
+				position = pyautogui.locateOnScreen(image, grayscale=grayscale)
+			else:
+				position = pyautogui.locateCenterOnScreen(image, grayscale=grayscale)
+			
+			if position is not None:
+				self.moveMouseAndClick(position[0], position[1], button)
+				return True
+			return False
+
 	def waitUntilImageAppears(self, image: str, wait_miliseconds: int):
 		eval(self.__action)
 
@@ -305,6 +361,7 @@ class RPyA:
 	def getWindow(self, name: str = '', id: int = 0):
 		eval(self.__action)
 
+	'''
 	def windowMove(self, window: Window, x: int, y: int):
 		eval(self.__action)
 
@@ -335,7 +392,6 @@ class RPyA:
 	def windowClickRelative(self, window: Window, x: int, y: int, button: int = 0):
 		eval(self.__action)
 
-	'''
 	pyautogui.getWindows() # returns a dict of window titles mapped to window IDs
 	pyautogui.getWindow(str_title_or_int_id) # returns a “Win” object
 	win.move(x, y)
@@ -359,4 +415,9 @@ class RPyA:
 	'''
 
 a = RPyA()
-a.ScreenshotArea("", 10, 100, 200, 100)
+
+x = "C:\\Users\\User\\Pictures\\Screenshots\\a.png"
+y = "C:\\Users\\User\\Pictures\\Screenshots\\b.png"
+
+b = a.imageRecognitionOnScreen(y, center=True, all_results=True)
+print(b)
