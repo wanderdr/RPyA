@@ -196,7 +196,7 @@ class RPyA:
             self.__Exception('No button found')
 
         if not error:
-            pyautogui.click(x=x, y=y, button=button)
+            pyautogui.click(button=button)
 
     def getScreenResolution(self):
         eval(self.__action)
@@ -269,7 +269,7 @@ class RPyA:
         elif width <= 0 or height <= 0:
             self.__Exception('Width or height cannot be equal or less than 0 (width: {width}, height: {height})'.format(width=width, height=height))
         elif (left + width > size[0]) or (top + height > size[1]):
-            self.__Exception('Index out of bounds (left + width: {left}, top + height: {top})'.format(left=(left + width), top=(y + height)))
+            self.__Exception('Index out of bounds (left + width: {left}, top + height: {top})'.format(left=(left + width), top=(top + height)))
         else:
             pyautogui.screenshot(location, region=(left, top, width, height))
 
