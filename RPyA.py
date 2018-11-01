@@ -6,6 +6,7 @@ import math
 import time
 import os
 
+
 class RPyA:
     def __init__(self):
         """
@@ -25,47 +26,47 @@ class RPyA:
         '''
         self.__action = "self._RPyA__StoreActions(sys._getframe().f_code.co_name, locals())"
 
-        #Flag to store or not actions called in a list
+        # Flag to store or not actions called in a list
         self.__fl_store_actions = True
-        #Flag to stop on error
+        # Flag to stop on error
         self.__fl_stop_on_error = True
-        #Flag to log on error
+        # Flag to log on error
         self.__fl_log_on_error = True
-        #Flag to log any information
+        # Flag to log any information
         self.__fl_log_actions = True
 
-        #List with actions called
+        # List with actions called
         self.__actions = []
-        #Log file
+        # Log file
         self.__log_file = 'c:\\users\\' + getpass.getuser() + '\\documents\\LogRPyA.txt'
 
-        #Key that can be holded or released
+        # Key that can be holded or released
         self.__keys_list = ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+',
-        ',', '-', '.', '/', '0','1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
-        '@', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'accept',
-        'add', 'alt', 'altleft', 'altright', 'apps', 'backspace', 'browserback', 'browserfavorites',
-        'browserforward', 'browserhome', 'browserrefresh', 'browsersearch', 'browserstop', 'capslock',
-        'clear', 'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete', 'divide', 'down',
-        'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16',
-        'f17', 'f18', 'f19', 'f2', 'f20', 'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
-        'f9', 'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja', 'kana', 'kanji',
-        'launchapp1', 'launchapp2', 'launchmail', 'launchmediaselect', 'left', 'modechange', 'multiply',
-        'nexttrack', 'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8',
-        'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn', 'pgup', 'playpause', 'prevtrack', 'print',
-        'printscreen', 'prntscrn', 'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator',
-        'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab', 'up', 'volumedown',
-        'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen', 'command', 'option', 'optionleft', 'optionright']
+                            ',', '-', '.', '/', '0','1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
+                            '@', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'accept',
+                            'add', 'alt', 'altleft', 'altright', 'apps', 'backspace', 'browserback', 'browserfavorites',
+                            'browserforward', 'browserhome', 'browserrefresh', 'browsersearch', 'browserstop', 'capslock',
+                            'clear', 'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete', 'divide', 'down',
+                            'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16',
+                            'f17', 'f18', 'f19', 'f2', 'f20', 'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
+                            'f9', 'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja', 'kana', 'kanji',
+                            'launchapp1', 'launchapp2', 'launchmail', 'launchmediaselect', 'left', 'modechange', 'multiply',
+                            'nexttrack', 'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8',
+                            'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn', 'pgup', 'playpause', 'prevtrack', 'print',
+                            'printscreen', 'prntscrn', 'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator',
+                            'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab', 'up', 'volumedown',
+                            'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen', 'command', 'option', 'optionleft', 'optionright']
 
-        #List of keys holded during execution
+        # List of keys holded during execution
         self.__key_down_list = []
         self.__mouse_holding = False
 
-    ####################################################################################################
-    ################################# GET AND SET EXECUTION PARAMETERS #################################
-    ####################################################################################################
+    # ###################################################################################################
+    # ################################ GET AND SET EXECUTION PARAMETERS #################################
+    # ###################################################################################################
 
-    ##### DEFINES #####
+    # #### DEFINES #####
 
     def setLogFile(self, file: str):
         self.__log_file = file
@@ -82,7 +83,7 @@ class RPyA:
     def setStoreActions(self, fl_store_actions: bool):
         self.__fl_store_actions = fl_store_actions
 
-    ##### ACTIONS RELATED #####
+    # #### ACTIONS RELATED #####
 
     def getActions(self):
         return self.__actions
@@ -97,7 +98,7 @@ class RPyA:
     def getNumberOfActions(self):
         return len(self.__actions)
 
-    ##### TIME RELATED #####
+    # #### TIME RELATED #####
 
     def getStartOfExecution(self):
         if len(self.__actions) > 0:
@@ -123,7 +124,7 @@ class RPyA:
     def getKeyList(self):
         return sorted(self.__keys_list)
 
-    ##### PRIVATE FUNCTIONS #####
+    # #### PRIVATE FUNCTIONS #####
 
     def __StoreActions(self, function: str, params: dict):
         time = str(datetime.now())
@@ -149,9 +150,9 @@ class RPyA:
             print('keying up {key}'.format(key=key))
             self.KeyUp(key)
 
-    ####################################################################################################
-    ############################################ ACTION LIST ###########################################
-    ####################################################################################################
+    # ###################################################################################################
+    # ########################################### ACTION LIST ###########################################
+    # ###################################################################################################
 
     def moveMouse(self, x: int, y: int):
         eval(self.__action)
@@ -268,7 +269,7 @@ class RPyA:
         elif width <= 0 or height <= 0:
             self.__Exception('Width or height cannot be equal or less than 0 (width: {width}, height: {height})'.format(width=width, height=height))
         elif (left + width > size[0]) or (top + height > size[1]):
-            self.__Exception('Index out of bounds (left + width: {left}, top + height: {top})'.format(left=(left + width), y=(y + height)))
+            self.__Exception('Index out of bounds (left + width: {left}, top + height: {top})'.format(left=(left + width), top=(y + height)))
         else:
             pyautogui.screenshot(location, region=(left, top, width, height))
 
@@ -383,9 +384,9 @@ class RPyA:
 
         return found
 
-    ####################################################################################################
-    #################################### WINDOWS ACTION LIST ###########################################
-    ####################################################################################################
+    # ###################################################################################################
+    # ################################### WINDOWS ACTION LIST ###########################################
+    # ###################################################################################################
 
     def listWindows(self):
         eval(self.__action)
@@ -422,7 +423,7 @@ class RPyA:
 
     def windowResize(self, window: pyautogui._window_win.Window, width: int, height: int):
         eval(self.__action)
-        if x <= 0 or y <= 0:
+        if width <= 0 or height <= 0:
             self.__Exception('Width or height not valid (width: {width}, height: {height})'.format(width=width, height=height))
         else:
             window.resize(width, height)
@@ -462,12 +463,12 @@ class RPyA:
         eval(self.__action)
 
         size = pyautogui.size()
-        #We have to restore it because we can't get the position/size with it minimized
+        # We have to restore it because we can't get the position/size with it minimized
         window.restore()
         position = window.get_position()
         if (position[0] + x > size[0]) or (position[1] + y > size[1]):
             self.__Exception('Index out of bounds (x: {x}, y: {y})'.format(x=x, y=y))
         else:
-            #Put the window on focus before move mouse and click
+            # Put the window on focus before move mouse and click
             window.set_foreground()
             pyautogui.click(x=position[0] + x, y=position[1] + y, button='left')
