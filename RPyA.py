@@ -216,22 +216,6 @@ class RPyA:
         else:
             self.__Exception('Key \'{key}\' not in list (get the key list with the function \'getKeyList()\')'.format(key=key))
 
-    def typePhrase(self, string: str, **kwargs):
-        eval(self.__action)
-        wait = 500
-        btw_time = 500
-
-        if 'wait' in kwargs:
-            wait = int(kwargs.wait) if int(kwargs.wait) > 0 else 500
-        if 'between_time' in kwargs:
-            btw_time = int(kwargs.between_time) if int(kwargs.between_time) > 0 else 500
-
-        time.sleep(wait/1000)
-        for key in list(string):
-            self.keyDown(key)
-            time.sleep(btw_time/1000)
-
-
     def keyDown(self, key: str):
         eval(self.__action)
         if key in self.__keys_list:
